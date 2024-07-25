@@ -1,3 +1,4 @@
+/*CODE IMPLEMENTING ARRAY IN STRUCT */
 #include <iostream>
 #include <string>
 using namespace std;
