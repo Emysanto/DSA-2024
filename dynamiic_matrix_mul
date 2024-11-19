@@ -1,0 +1,99 @@
+#include <iostream>
+using namespace std;
+
+struct Matrix {
+    int rows;
+    int cols;
+    int** data; // Pointer to store matrix elements
+
+    // Function to allocate memory for the matrix
+    void allocate(int r, int c) {
+        rows = r;
+        cols = c;
+        data = new int*[rows];
+        for (int i = 0; i < rows; ++i) {
+            data[i] = new int[cols];
+        }
+    }
+
+    // Function to deallocate memory for the matrix
+    void deallocate() {
+        for (int i = 0; i < rows; ++i) {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
+
+    // Function to input matrix elements
+    void input() {
+        cout << "Enter elements of " << rows << "x" << cols << " matrix:" << endl;
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                cin >> data[i][j];
+            }
+        }
+    }
+
+    // Function to display the matrix
+    void display() const {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                cout << data[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+// Function to multiply two matrices
+Matrix multiply(const Matrix& A, const Matrix& B) {
+    Matrix result;
+    if (A.cols != B.rows) {
+        cout << "Matrix multiplication is not possible with given dimensions!" << endl;
+        result.allocate(0, 0); // No multiplication possible, allocate zero dimensions
+        return result;
+    }
+
+    result.allocate(A.rows, B.cols);
+    for (int i = 0; i < A.rows; ++i) {
+        for (int j = 0; j < B.cols; ++j) {
+            result.data[i][j] = 0;
+            for (int k = 0; k < A.cols; ++k) {
+                result.data[i][j] += A.data[i][k] * B.data[k][j];
+            }
+        }
+    }
+    return result;
+}
+
+int main() {
+    Matrix A, B, C;
+
+    int rowsA, colsA, rowsB, colsB;
+
+    // Input dimensions and elements of first matrix
+    cout << "Enter rows and columns for first matrix: ";
+    cin >> rowsA >> colsA;
+    A.allocate(rowsA, colsA);
+    A.input();
+
+    // Input dimensions and elements of second matrix
+    cout << "Enter rows and columns for second matrix: ";
+    cin >> rowsB >> colsB;
+    B.allocate(rowsB, colsB);
+    B.input();
+
+    // Multiply matrices
+    C = multiply(A, B);
+
+    // Display result
+    cout << "Resultant Matrix:" << endl;
+    C.display();
+
+    // Free allocated memory
+    A.deallocate();
+    B.deallocate();
+    C.deallocate();
+
+    return 0;
+}
